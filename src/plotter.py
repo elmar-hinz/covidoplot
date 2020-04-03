@@ -34,6 +34,7 @@ def read():
                 day['date'] = datetime.datetime.strptime(row[0], '%d.%m.%Y')
                 day['cumulated cases'] = int(row[1])
                 day['recovered cases'] = int(row[2])
+                day['died cases'] = int(row[3])
                 data.append(day)
         return data
 
@@ -48,24 +49,11 @@ def read():
 
 def calc(in_data):
     def calc_table(rows):
-        def calc_percent_since_day_before(columns):
-            for i in range(1, len(columns['cumulated cases'])):
-                yesterdays = columns['cumulated cases'][i - 1]
-                todays = columns['cumulated cases'][i]
-                if yesterdays == 0:
-                    if todays > 0:
-                        percent = np.nan
-                    else:
-                       percent = 0.0
-                else:
-                    difference = todays - yesterdays
-                    percent = difference / yesterdays * 100
-                columns['percent since one day'][i] = percent
-
         columns = {
             'date': [],
             'active cases': [],
             'recovered cases': [],
+            'died cases': [],
             'cumulated cases': [],
             'percent since one day': [],
         }
@@ -73,9 +61,10 @@ def calc(in_data):
             columns['date'].append(row['date'])
             columns['cumulated cases'].append(row['cumulated cases'])
             columns['recovered cases'].append(row['recovered cases'])
+            columns['died cases'].append(row['died cases'])
             columns['active cases'].append(row['cumulated cases'] - row['recovered cases'])
             columns['percent since one day'].append(np.nan)
-        calc_percent_since_day_before(columns)
+
         return columns
 
     data = {}
@@ -104,12 +93,13 @@ def plot(data):
     def plot_stack(data, title):
         ylabel = 'bestätigte Fälle'
         xlabel = '2020'
-        labels = ["Akute Fälle", "Genesene Fälle"]
+        labels = ["Aktive Fälle", "Verstorbene Fälle", "Genesene Fälle"]
         fig, ax = plt.subplots()
         format_dates(ax)
         ax.stackplot(
             data['date'],
             data['active cases'],
+            data['died cases'],
             data['recovered cases'],
             labels=labels)
         ax.legend(loc='upper left')
@@ -133,19 +123,6 @@ def plot(data):
         plt.ylabel(ylabel)
         plt.xlabel(xlabel)
 
-    def plot_steepness(columns, title):
-        ylabel = 'Zunahme seit dem Vortag in %'
-        xlabel = '2020'
-        fig, ax = plt.subplots()
-        format_dates(ax)
-        plt.plot(
-            columns['date'],
-            columns['percent since one day']
-        )
-        plt.title(title)
-        plt.ylabel(ylabel)
-        plt.xlabel(xlabel)
-
     plot_stack(data['district'], 'Kreis Höxter')
     write('district-hoexter-stacked')
     plot_compare_communes(data['communes'], 'Gemeinden im Kreis Höxter')
@@ -153,8 +130,6 @@ def plot(data):
     for key, title in config['communes'].items():
         plot_stack(data['communes'][key], title)
         write(key + '-stacked')
-        plot_steepness(data['communes'][key], title)
-        write(key + '-steepness')
 
 data = calc(read())
 plot(data)
