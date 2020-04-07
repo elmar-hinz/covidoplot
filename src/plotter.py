@@ -75,18 +75,25 @@ def calc(in_data):
             'cumulated cases': [],
             'relative cumulated cases': [],
             'relative active cases': [],
+            'difference': [],
         }
+        day_before = 0
         for row in rows:
             columns['date'].append(row['date'])
             columns['cumulated cases'].append(row['cumulated cases'])
             columns['recovered cases'].append(row['recovered cases'])
             columns['died cases'].append(row['died cases'])
-            active_cases = int(row['cumulated cases'] - row['recovered cases'])
+            active_cases = int(
+                row['cumulated cases']
+                - row['recovered cases']
+                - row['died cases'])
             columns['active cases'].append(active_cases)
             columns['relative cumulated cases'].append(
                 row['cumulated cases'] / population * 100000)
             columns['relative active cases'].append(
                 active_cases / population * 100000)
+            columns['difference'].append( row['cumulated cases'] - day_before )
+            day_before = row['cumulated cases']
 
         return columns
 
@@ -155,10 +162,54 @@ def plot(data):
         plt.xticks(rotation=45)
         plt.grid(True, alpha=0.3, linestyle='dashdot')
 
+    def plot_summary(data, title):
+        width = 0.66
+        ylabel = 'bestätigte Fälle'
+        xlabel = '2020'
+        fig, ax = plt.subplots()
+        ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+        style(ax)
+        ax.bar(
+            data['date'],
+            data['cumulated cases'],
+            width,
+            label='alle Fälle',
+            color='dodgerblue',
+        )
+        ax.bar(
+            data['date'],
+            data['difference'],
+            width,
+            label='neue Fälle',
+            color='orange',
+        )
+        ax.plot(
+            data['date'],
+            data['active cases'],
+            label='erkrankt',
+            color='firebrick'
+        )
+        ax.plot(
+            data['date'],
+            data['recovered cases'],
+            label='wieder gesund',
+            color='forestgreen'
+        )
+        ax.plot(
+            data['date'],
+            data['died cases'],
+            label='verstorben',
+            color='black'
+        )
+        ax.legend(loc='upper left')
+        plt.title(title)
+        plt.ylabel(ylabel)
+        plt.xlabel(xlabel)
+
     def plot_stack(data, title):
         ylabel = 'bestätigte Fälle'
         xlabel = '2020'
-        labels = ["Aktive Fälle", "Verstorbene Fälle", "Genesene Fälle"]
+        labels = ["erkrankt", "verstorben", "wieder gesund"]
         fig, ax = plt.subplots()
         ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
         style(ax)
@@ -174,7 +225,7 @@ def plot(data):
         plt.xlabel(xlabel)
 
     def plot_compare_communes_relatively(communes, title):
-        ylabel = 'bestätigte Fälle je 100.000'
+        ylabel = 'bestätigte Fälle je 100.000 Einwohnern'
         xlabel = '2020'
         fig, ax = plt.subplots()
         style(ax)
@@ -208,7 +259,7 @@ def plot(data):
         plt.xlabel(xlabel)
 
     def plot_compare_communes_relatively_for_active_cases(communes, title):
-        ylabel = 'aktive Fälle je 100.000'
+        ylabel = 'aktive Fälle je 100.000 Einwohnern'
         xlabel = '2020'
         fig, ax = plt.subplots()
         style(ax)
@@ -224,8 +275,12 @@ def plot(data):
         plt.ylabel(ylabel)
         plt.xlabel(xlabel)
 
+    plot_summary(data['district'], config['name of district'])
+    write('district-hoexter-summary')
+
     plot_stack(data['district'], config['name of district'])
     write('district-hoexter-stacked')
+
     plot_compare_communes_absolutely(
         data['communes'],
         'Bestätigte Fälle im ' + config['name of district'] + ' im absoluten '
