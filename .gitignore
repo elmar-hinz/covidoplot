@@ -1,5 +1,8 @@
 .idea/
 data/cleaned/
+data/raw/jhu/
+data/processed/
+data/raw/kreis-hoexter/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
