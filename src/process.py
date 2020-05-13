@@ -27,8 +27,16 @@ def process_common(df, type, key):
         df['new'] = 0
         df.loc[0, 'new'] = df.loc[0, 'confirmed']
         for i in range(1, len(df)):
-            df.loc[i, 'new'] = df.loc[i, 'confirmed'] - df.loc[i -1,
+            df.loc[i, 'new'] = df.loc[i, 'confirmed'] - df.loc[i - 1,
                                                                'confirmed']
+    def last_weeks_incidence(df):
+        def f(row):
+            r = lakh * row.last_weeks_incidence / c('populations')[p(type)][key]
+            return round(r, 3)
+        df['last_weeks_incidence'] = df['new'].rolling(min_periods=1,
+                                                   window=7).sum()
+        df['last_weeks_incidence'] = df.apply(f, axis=1)
+
     def ill(row):
         return row.confirmed - row.recovered - row.dead
 
@@ -50,6 +58,7 @@ def process_common(df, type, key):
 
     df['ill'] = df.apply(ill, axis=1)
     new_cases(df)
+    last_weeks_incidence(df)
     df['density_of_cases'] = df.apply(density_of_cases, axis=1)
     df['density_of_illness'] = df.apply(density_of_illness, axis=1)
     df['density_of_death'] = df.apply(density_of_death, axis=1)

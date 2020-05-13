@@ -12,14 +12,30 @@ from configuration import plural as p
 from configuration import get as c
 
 black = c('colors.black')
-blue = c('colors.blue')
-green = c('colors.green')
-orange = c('colors.orange')
+grey = c('colors.grey')
+white = c('colors.white')
+darkred = c('colors.darkred')
 red = c('colors.red')
+pink = c('colors.pink')
+orange = c('colors.orange')
+yellow = c('colors.yellow')
+lightgreen = c('colors.lightgreen')
+green = c('colors.green')
+darkgreen = c('colors.darkgreen')
+blue = c('colors.blue')
+darkblue = c('colors.darkblue')
+purple = c('colors.purple')
 
-label_confirmed_density = 'bestätigte Fälle je 100.000 Einwohnern'
-label_illness_density = 'Erkrankte je 100.000 Einwohnern'
+colors = [ red, pink, orange, yellow, lightgreen, darkgreen, blue, darkblue,
+           purple, grey, darkred, black, white ]
+
+label_confirmed_density = 'bestätigte Fälle je 100.000 Einwohner'
+label_illness_density = 'Erkrankte je 100.000 Einwohner'
 label_confirmed = 'bestätigte Fälle'
+label_last_weeks_incidence = 'neue Fälle je 100.000 Einwohner'
+title_last_weeks_incidence = '7-Tage-Inzidenz '
+label_red_line = 'rote Line = 50'
+label_yellow_line = 'gelbe Berliner Line = 20'
 
 def title(type, key):
     name = c('names')[p(type)][key]
@@ -100,9 +116,11 @@ def plot_helper_comparism(
     _, ax = plt.subplots()
     style(ax)
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+    i = 0
     for k, v in c('names')[p(child_type)].items():
         mf = cdf.loc[(k, subindex)]
-        ax.plot(mf, label=v)
+        ax.plot(mf, label=v, color=colors[i])
+        i += 1
     ax.legend(loc='upper left')
     plt.title(title_prefix + ': ' + title(type, key))
     plt.ylabel(ylabel)
@@ -113,7 +131,7 @@ def plot_overview(df, type, key):
     # To pretty format the x-axis a datetime object is required as index.
     # But if that requirement is satisfied, bars are dropped, when
     # lines are plotted. Seems to be a strange bug in the pandas implementation.
-    width = 0.66
+    width = 1
     # df = import_dates(df)
     _, ax = plt.subplots()
     style(ax)
@@ -121,12 +139,25 @@ def plot_overview(df, type, key):
     ax.bar(df.date, df.confirmed, width, label='alle Fälle', color=blue)
     ax.bar(df.date, df.new, width, label='neue Fälle', color=orange)
     ax.plot(df.date, df.ill, label='erkrankt', color=red)
-    ax.plot(df.date, df.recovered, label='wieder gesund', color=green)
+    ax.plot(df.date, df.recovered, label='wieder gesund', color=darkgreen)
     ax.plot(df.date, df.dead, label='verstorben', color=black)
     ax.legend(loc='upper left')
     plt.title('Übersicht: ' + title(type, key))
     plt.ylabel(label_confirmed)
     save(type, key, 'overview')
+
+def plot_last_weeks_incidence(df, type, key):
+    _, ax = plt.subplots()
+    style(ax)
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+    ax.plot(df.date, df.last_weeks_incidence, label='7-Tage-Inzidenz',
+            color=blue)
+    plt.axhline(50, color=red, label=label_red_line)
+    plt.axhline(20, color=yellow, label=label_yellow_line)
+    plt.title(title_last_weeks_incidence + title(type, key))
+    plt.ylabel(label_last_weeks_incidence)
+    ax.legend(loc='upper left')
+    save(type, key, 'last_weeks_incidence')
 
 def plot_stacked(df, type, key):
     # df = import_dates(df)
@@ -196,6 +227,7 @@ def process_disctricts(dfs, cdfs):
     for district in config['names']['districts']:
         plot_overview(dfs['district-' + district], 'district', district)
         plot_stacked(dfs['district-' + district], 'district', district)
+        plot_last_weeks_incidence(dfs['district-' + district], 'district', district)
         plot_absolute_comparism(cdfs['district-' + district], 'district',
                                 'commune', district)
         plot_relative_comparism(cdfs['district-' + district], 'district',
