@@ -11,6 +11,8 @@ from configuration import plural as p
 # noinspection PyUnresolvedReferences
 from configuration import get as c
 
+figsize=(9, 6)
+
 black = c('colors.black')
 grey = c('colors.grey')
 white = c('colors.white')
@@ -30,12 +32,13 @@ colors = [ red, pink, orange, yellow, lightgreen, darkgreen, blue, darkblue,
            purple, grey, darkred, black, white ]
 
 label_confirmed_density = 'bestätigte Fälle je 100.000 Einwohner'
-label_illness_density = 'Erkrankte je 100.000 Einwohner'
+label_illness_density = 'Aktiv Infizierte je 100.000 Einwohner'
 label_confirmed = 'bestätigte Fälle'
 label_last_weeks_incidence = 'neue Fälle je 100.000 Einwohner'
 title_last_weeks_incidence = '7-Tage-Inzidenz '
 label_red_line = 'rote Line = 50'
 label_yellow_line = 'gelbe Berliner Line = 20'
+
 
 def title(type, key):
     name = c('names')[p(type)][key]
@@ -113,7 +116,7 @@ def concat(dfs):
 def plot_helper_comparism(
         cdf, type, child_type, key, subindex, ylabel, title_prefix,
         file_suffix):
-    _, ax = plt.subplots()
+    _, ax = plt.subplots(figsize=figsize)
     style(ax)
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     i = 0
@@ -133,13 +136,13 @@ def plot_overview(df, type, key):
     # lines are plotted. Seems to be a strange bug in the pandas implementation.
     width = 1
     # df = import_dates(df)
-    _, ax = plt.subplots()
+    _, ax = plt.subplots(figsize=figsize)
     style(ax)
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     ax.bar(df.date, df.confirmed, width, label='alle Fälle', color=blue)
     ax.bar(df.date, df.new, width, label='neue Fälle', color=orange)
-    ax.plot(df.date, df.ill, label='erkrankt', color=red)
-    ax.plot(df.date, df.recovered, label='wieder gesund', color=darkgreen)
+    ax.plot(df.date, df.ill, label='infiziert', color=red)
+    ax.plot(df.date, df.recovered, label='genesen', color=darkgreen)
     ax.plot(df.date, df.dead, label='verstorben', color=black)
     ax.legend(loc='upper left')
     plt.title('Übersicht: ' + title(type, key))
@@ -147,7 +150,7 @@ def plot_overview(df, type, key):
     save(type, key, 'overview')
 
 def plot_last_weeks_incidence(df, type, key):
-    _, ax = plt.subplots()
+    _, ax = plt.subplots(figsize=figsize)
     style(ax)
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     ax.plot(df.date, df.last_weeks_incidence, label='7-Tage-Inzidenz',
@@ -161,12 +164,12 @@ def plot_last_weeks_incidence(df, type, key):
 
 def plot_stacked(df, type, key):
     # df = import_dates(df)
-    _, ax = plt.subplots()
+    _, ax = plt.subplots(figsize=figsize)
     style(ax)
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     ax.stackplot(df.date,
                  df.ill, df.recovered, df.dead,
-                 labels=['erkrankt', 'wieder gesund', 'verstorben'],
+                 labels=['infiziert', 'genesen', 'verstorben'],
                  colors=[red, green, black]
                  )
     ax.legend(loc='upper left')
@@ -204,16 +207,19 @@ def plot_risc_comparism(cdf, type, child_type, key):
 def plot_parents_risc_comparism(dfs, commune):
     field = 'density_of_illness'
     labels = [c('names.communes')[commune], 'Kreis Höxter', 'Deutschland',
-              'Italien']
+              'Italien', 'Deutschlandtrend ohne Lockerungen']
     frames=[]
     frames.append(dfs['commune-' + commune][field])
     frames.append(dfs['district-hoexter'][field])
     frames.append(dfs['country-germany'][field])
     frames.append(dfs['country-italy'][field])
     df = pd.concat(frames, axis=1).dropna()
-    _, ax = plt.subplots()
+    _, ax = plt.subplots(figsize=figsize)
     style(ax)
     ax.plot(df)
+    start = pd.to_datetime('2020-03-15')
+    end = pd.to_datetime('2020-05-20')
+    ax.plot([start, end], [130, 0], linestyle='--', color=grey)
     plt.legend(labels=labels)
     plt.ylabel(label_illness_density)
     save('commune', commune, 'upwards-risc-comparism')
