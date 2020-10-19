@@ -36,8 +36,8 @@ label_illness_density = 'Aktiv Infizierte je 100.000 Einwohner'
 label_confirmed = 'bestätigte Fälle'
 label_last_weeks_incidence = 'neue Fälle je 100.000 Einwohner'
 title_last_weeks_incidence = '7-Tage-Inzidenz '
-label_red_line = 'rote Line = 50'
-label_yellow_line = 'gelbe Berliner Line = 20'
+label_red_line = 'Gefährdungsstufe 2 = 50'
+label_yellow_line = 'Gefährdungsstufe 1 = 35'
 
 
 def title(type, key):
@@ -156,7 +156,7 @@ def plot_last_weeks_incidence(df, type, key):
     ax.plot(df.date, df.last_weeks_incidence, label='7-Tage-Inzidenz',
             color=blue)
     plt.axhline(50, color=red, label=label_red_line)
-    plt.axhline(20, color=yellow, label=label_yellow_line)
+    plt.axhline(35, color=yellow, label=label_yellow_line)
     plt.title(title_last_weeks_incidence + title(type, key))
     plt.ylabel(label_last_weeks_incidence)
     ax.legend(loc='upper left')
