@@ -1,0 +1,3 @@
+import getting
+
+getting.run()

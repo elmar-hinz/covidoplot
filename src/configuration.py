@@ -73,20 +73,21 @@ configuration = {
         },
     },
     'populations': {
+        # 31.12.2019: https://www.it.nrw/statistik/eckdaten/bevoelkerung-nach-gemeinden-93051?fbclid=IwAR1SODPI0V5GuLr73CwuUO-MVdGjZlIm4Ce5eln3Enyc42yuKXUOVETT9r4
         'communes': {
-            'bad-driburg': 19000,
-            'brakel': 16000,
-            'borgentreich': 8500,
-            'beverungen': 13000,
-            'hoexter': 29000,
-            'marienmuenster': 5000,
-            'nieheim': 6000,
-            'steinheim': 12500,
-            'warburg': 23000,
-            'willebadessen': 8000
+            'bad-driburg': 18959,
+            'brakel': 16137,
+            'borgentreich': 8543,
+            'beverungen': 13103,
+            'hoexter': 28808,
+            'marienmuenster': 4902,
+            'nieheim': 6084,
+            'steinheim': 12528,
+            'warburg': 23076,
+            'willebadessen': 8111
         },
         'districts': {
-            'hoexter': 140500,
+            'hoexter': 140251,
         },
         'countries': {
             'germany': 83000000,
