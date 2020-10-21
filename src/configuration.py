@@ -125,6 +125,7 @@ configuration = {
         'jhu_recovered': my_directory + '../data/raw/jhu/csse_covid_19_data' \
                                         '/csse_covid_19_time_series' \
                                         '/time_series_covid19_recovered_global.csv',
+        'shapefile': 'zip:///' + my_directory + '../data/district-hoexter.shp.zip',
         'raw': {
             'districts': {
                 'hoexter': my_directory +
