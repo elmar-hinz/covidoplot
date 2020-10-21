@@ -3,13 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
-import json
-# noinspection PyUnresolvedReferences
-from configuration import configuration as config
-# noinspection PyUnresolvedReferences
 from configuration import plural as p
-# noinspection PyUnresolvedReferences
 from configuration import get as c
+from lib import read_imported_dfs
 
 figsize=(9, 6)
 
@@ -53,52 +49,15 @@ def style(ax):
     plt.xticks(rotation=45)
     plt.grid(True, alpha=0.3, linestyle='dashdot')
 
-def write(dataframes):
-    for key, df in dataframes.items():
-        path = config['directories']['published']['data'] + key + '.json'
-        df.to_json(path, orient='records', date_format='iso')
-
-def write_configuration():
-    path = c('directories.published.data') + 'configuration.json'
-    with open(path, 'w') as outfile:
-        json.dump(c(''), outfile)
-    idents = c('names.communes')
-    path = c('directories.published.data') + 'ident.json'
-    with open(path, 'w') as outfile:
-        json.dump(idents, outfile)
-
 def save(type, key, title):
     name = type + '-' + key + '-' + title + '.png'
-    path = config['directories']['published']['plots'] + name
+    path = c('directories.export.plots') + name
     plt.savefig(path)
     time.sleep(0.3)
     plt.clf()
     time.sleep(0.1)
     plt.close()
     time.sleep(0.1)
-
-def read():
-    dfs = {}
-
-    def read_csv(name):
-        try:
-            df = pd.read_csv(c('directories.processed') + name + '.csv',
-                             parse_dates=['date'])
-            df.set_index('date', drop=False, inplace=True)
-            dfs[name] = df
-        except FileNotFoundError:
-            print('missing: ' + name)
-
-    for key in c('names.communes'):
-        read_csv('commune-' + key)
-
-    for key in c('names.districts'):
-        read_csv('district-' + key)
-
-    for key in c('names.countries'):
-        read_csv('country-' + key)
-
-    return dfs
 
 def concat(dfs):
     cdfs = {}
@@ -225,12 +184,12 @@ def plot_parents_risc_comparism(dfs, commune):
     save('commune', commune, 'upwards-risc-comparism')
 
 def process_countries(dfs, cdfs):
-    for country in config['names']['countries']:
+    for country in c('names.countries'):
         plot_overview(dfs['country-' + country], 'country', country)
         plot_stacked(dfs['country-' + country], 'country', country)
 
 def process_disctricts(dfs, cdfs):
-    for district in config['names']['districts']:
+    for district in c('names.districts'):
         plot_overview(dfs['district-' + district], 'district', district)
         plot_stacked(dfs['district-' + district], 'district', district)
         plot_last_weeks_incidence(dfs['district-' + district], 'district', district)
@@ -242,15 +201,14 @@ def process_disctricts(dfs, cdfs):
                             'commune', district)
 
 def process_communes(dfs, cdfs):
-    for commune in config['names']['communes']:
+    for commune in c('names.communes'):
         plot_overview(dfs['commune-' + commune], 'commune', commune)
         plot_stacked(dfs['commune-' + commune], 'commune', commune)
         plot_parents_risc_comparism(dfs, commune)
 
-dfs = read()
-cdfs = concat(dfs)
-write_configuration()
-write(dfs)
-process_countries(dfs, cdfs)
-process_disctricts(dfs, cdfs)
-process_communes(dfs, cdfs)
+def do():
+    dfs = read_imported_dfs()
+    cdfs = concat(dfs)
+    process_countries(dfs, cdfs)
+    process_disctricts(dfs, cdfs)
+    process_communes(dfs, cdfs)

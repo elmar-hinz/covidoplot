@@ -87,6 +87,7 @@ configuration = {
             'willebadessen': 8111
         },
         'districts': {
+            # 31.12.2019: https://www.it.nrw/statistik/eckdaten/bevoelkerung-nach-gemeinden-93051?fbclid=IwAR1SODPI0V5GuLr73CwuUO-MVdGjZlIm4Ce5eln3Enyc42yuKXUOVETT9r4
             'hoexter': 140251,
         },
         'countries': {
@@ -103,7 +104,12 @@ configuration = {
                 'hoexter': my_directory + '../data/raw/kreis-hoexter/'
             },
         },
-        'processed': my_directory + '../data/processed/',
+        'imported': my_directory + '../data/imported/',
+        # 'processed': my_directory + '../data/processed/',
+        'export': {
+            'plots': my_directory + '../data/export/plots/',
+            'data': my_directory + '../data/export/data/',
+        },
         'published': {
             'plots': my_directory + '../../covidoplot-publisher/assets/plots/',
             'data': my_directory + '../../covidoplot-publisher/_data/'
@@ -138,6 +144,9 @@ def get(key):
         current = current[k]
     return current
 
-Path(get('directories.processed')).mkdir(parents=True, exist_ok=True)
+
+Path(get('directories.imported')).mkdir(parents=True, exist_ok=True)
+Path(get('directories.export.plots')).mkdir(parents=True, exist_ok=True)
+Path(get('directories.export.data')).mkdir(parents=True, exist_ok=True)
 Path(get('directories.published.plots')).mkdir(parents=True, exist_ok=True)
 Path(get('directories.published.data')).mkdir(parents=True, exist_ok=True)

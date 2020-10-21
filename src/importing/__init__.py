@@ -1,7 +1,7 @@
-from getting import countries, districts, communes
+from importing import countries, districts, communes
 
 
-def run():
+def do():
     countries.run()
     districts.run()
     communes.run()

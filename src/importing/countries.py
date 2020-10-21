@@ -1,6 +1,7 @@
 import pandas as pd
 from configuration import get as c
-from getting.commons import write_dataframe, process_entity
+from importing.commons import process_entity
+from lib import write_imported_dataframe
 
 def load_jhu_data():
     df_confirmed = pd.read_csv(c('files.jhu_confirmed'))
@@ -31,5 +32,5 @@ def run():
 
     for key, names in c('names.countries').items():
         df = process_jhu_data(*dfs, country=names['jhu'], key=key)
-        write_dataframe(df, 'country-' + key)
+        write_imported_dataframe(df, 'country-' + key)
 

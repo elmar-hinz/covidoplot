@@ -57,8 +57,4 @@ def process_manual_data(df, type, key):
     process_entity(df, type, key)
     return df
 
-def write_dataframe(df, filename_trunk):
-    file = c('directories.processed') + filename_trunk + '.csv'
-    df.to_csv(file, index=False)
-
 

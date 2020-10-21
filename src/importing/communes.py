@@ -1,6 +1,7 @@
 import pandas as pd
 from configuration import get as c
-from getting.commons import write_dataframe, process_manual_data
+from importing.commons import process_manual_data
+from lib import write_imported_dataframe
 
 
 def load(district, commune):
@@ -13,4 +14,4 @@ def run():
     for key, name in c('names.communes').items():
         df = load('hoexter', key)
         df = process_manual_data(df, 'commune', key)
-        write_dataframe(df, 'commune-' + key)
+        write_imported_dataframe(df, 'commune-' + key)

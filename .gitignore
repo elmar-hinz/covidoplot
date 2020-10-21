@@ -1,7 +1,9 @@
 .idea/
 data/cleaned/
 data/raw/jhu/
+data/imported/
 data/processed/
+data/export/
 data/raw/kreis-hoexter/
 
 # Byte-compiled / optimized / DLL files
