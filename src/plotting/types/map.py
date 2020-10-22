@@ -1,16 +1,19 @@
 import geopandas
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
 from configuration import get as c
 from configuration import plural as p
 from .lib.commons import save
+from .lib.colors import green, yellow, red, darkgreen
+
 
 # For now this is hardcoded to Kreis Höxter
 # May be extended to extract district maps from
 # a common shapefile by district name.
 def plot(cdf, type, child_type, key):
 
-    # load date
+    # load data
     def get_latest_incidences():
         incidences = list()
         for k, v in c('names')[p(child_type)].items():
@@ -39,8 +42,9 @@ def plot(cdf, type, child_type, key):
         ax=axes,
         column='last_weeks_incidence',
         legend=False,
-        scheme="quantiles",
-        cmap='OrRd',
+        scheme="user_defined",
+        cmap=ListedColormap([darkgreen, green, yellow, red]),
+        classification_kwds={'bins': [0, 35, 50]}
     )
 
     # style
