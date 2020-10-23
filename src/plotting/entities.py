@@ -26,7 +26,8 @@ def process_disctricts(dfs, cdfs):
                             'commune', district)
         last_weeks_incidence.plot(dfs['district-' + district], 'district',
                                   district)
-        map.plot(cdfs['district-' + district], 'district', 'commune', district)
+        map.plot(dfs['district-' + district], cdfs['district-' + district],
+                 'district', 'commune', district)
 
 def process_communes(dfs, cdfs):
     for commune in c('names.communes'):

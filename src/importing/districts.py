@@ -8,7 +8,6 @@ def load(district):
     path = c('files.raw.districts')[district]
     return pd.read_csv(path, sep=';')
 
-
 def run():
 
     for key, name in c('names.districts').items():
