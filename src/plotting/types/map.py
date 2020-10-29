@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from configuration import get as c
 from configuration import plural as p
-from .lib.commons import save
+from .lib.commons import save, mapsize
 from .lib.colors import green, yellow, red, darkgreen
 
 colors = [darkgreen, green, yellow, red]
@@ -97,7 +97,7 @@ def plot(district_df, cdf, type, child_type, key):
     district.boundary.plot(ax=axes, color='#ddd', linewidth=0.3)
 
     # style
-    figure.set_size_inches(9, 9)
+    figure.set_size_inches(mapsize)
     if total_incidence is not None:
         bbox_props = dict(boxstyle="round,pad=0.45",
                           fc="white",
