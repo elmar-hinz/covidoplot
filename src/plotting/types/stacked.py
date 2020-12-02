@@ -22,4 +22,3 @@ def plot(df, type, key):
     plt.title(title(type, key))
     plt.ylabel(label_confirmed)
     save(type, key, 'stacked')
-

@@ -2,21 +2,23 @@ import geopandas
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
+from matplotlib.colors import Normalize
 from configuration import get as c
 from configuration import plural as p
 from .lib.commons import save, mapsize
-from .lib.colors import green, yellow, red, darkgreen
+from .lib.colors import green, yellow, red, darkgreen, darkred, darkerred
 
-colors = [darkgreen, green, yellow, red]
+colors = [darkgreen, green, yellow, red, darkred, darkerred]
 cmap = ListedColormap(colors)
-bins = [0, 35, 50]
+bins = [0, 35, 50, 100, 200]
+
 
 def get_color(value):
     if value is None:
         return 'grey'
     color = colors[0]
     for i in range(len(bins)):
-        if( value > bins[i]):
+        if value > bins[i]:
             color = colors[i + 1]
         else:
             break
@@ -53,6 +55,7 @@ def plot(district_df, cdf, type, child_type, key):
         total_incidence_source = 'Kreis, vorläufig'
     else:
         total_incidence = None
+        total_incidence_source = ''
     if total_incidence is not None:
         total_incidence = float(total_incidence)
 
@@ -86,12 +89,13 @@ def plot(district_df, cdf, type, child_type, key):
     # communes
     district.plot(ax=axes, color='white')  # white background for alpha
     communes.plot(
+        norm=Normalize(0, len(colors) - 1),
         ax=axes,
         column='last_weeks_incidence',
         legend=False,
         scheme="user_defined",
         cmap=cmap,
-        classification_kwds={'bins': [0, 35, 50]},
+        classification_kwds={'bins': bins},
         alpha=0.88,
     )
     district.boundary.plot(ax=axes, color='#ddd', linewidth=0.3)
@@ -116,7 +120,6 @@ def plot(district_df, cdf, type, child_type, key):
             bbox=bbox_props,
             size=10.5,
             color='#666',
-            #color=get_color(total_incidence),
             fontfamily='sans-serif',
             fontweight='bold',
             fontstyle='italic',
