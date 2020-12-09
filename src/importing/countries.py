@@ -1,5 +1,6 @@
 import pandas as pd
 from configuration import get as c
+from importing.commons import shorten_df
 from importing.commons import process_entity
 from lib import write_imported_dataframe
 
@@ -24,6 +25,7 @@ def process_jhu_data(df_confirmed, df_deaths, df_recovered, country, key):
         .rename(index={0: 'confirmed', 1: 'recovered', 2: 'dead'}) \
         .transpose().reset_index().rename(columns={'index': 'date'})
     df['date'] = df.apply(date, axis=1)
+    df = shorten_df(df)
     process_entity(df, 'country', key)
     return df
 

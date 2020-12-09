@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 my_directory = os.path.dirname(os.path.realpath(__file__)) + '/'
 
@@ -148,7 +149,9 @@ def get(key):
 
 
 Path(get('directories.imported')).mkdir(parents=True, exist_ok=True)
+shutil.rmtree(get('directories.export.plots'))
 Path(get('directories.export.plots')).mkdir(parents=True, exist_ok=True)
+shutil.rmtree(get('directories.export.data'))
 Path(get('directories.export.data')).mkdir(parents=True, exist_ok=True)
 Path(get('directories.published.plots')).mkdir(parents=True, exist_ok=True)
 Path(get('directories.published.data')).mkdir(parents=True, exist_ok=True)

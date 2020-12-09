@@ -12,6 +12,7 @@ def plot(df, type, key):
     width = 1
     _, ax = plt.subplots(figsize=figsize)
     style(ax)
+    df = df.iloc[1:]
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     ax.bar(df.date, df.confirmed, width, label='alle Fälle', color=blue)
     ax.bar(df.date, df.new, width, label='neue Fälle', color=orange)

@@ -4,10 +4,14 @@ from plotting.entities import process_countries
 from plotting.entities import process_disctricts
 from plotting.entities import process_communes
 
-def do():
+def do(args):
+    print('Argument List:', str(args))
     dfs = read_imported_dfs()
-    cdfs = concat(dfs)
-    process_countries(dfs, cdfs)
-    process_disctricts(dfs, cdfs)
-    process_communes(dfs, cdfs)
+    if len(args) == 0 or args[0] == 'countries':
+        process_countries(dfs, args[1:])
+    if len(args) == 0 or args[0] == 'districts':
+        cdfs = concat(dfs)
+        process_disctricts(dfs, cdfs, args[1:])
+    if len(args) == 0 or args[0] == 'communes':
+        process_communes(dfs, args[1:])
 
