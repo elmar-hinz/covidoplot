@@ -1,4 +1,5 @@
 import pandas as pd
+from importing.commons import shorten_df
 from configuration import get as c
 from importing.commons import process_manual_data
 from lib import write_imported_dataframe
@@ -12,6 +13,7 @@ def run():
 
     for key, name in c('names.districts').items():
         df = load(key)
+        df = shorten_df(df)
         df = process_manual_data(df, 'district', key)
         write_imported_dataframe(df, 'district-' + key)
 

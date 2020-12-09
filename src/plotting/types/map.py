@@ -83,11 +83,13 @@ def plot(district_df, cdf, type, child_type, key):
             color=get_color(total_incidence),
             ax=axes,
             alpha=0.3,
+            linewidth=0,
         )
         shadow.boundary.plot(ax=axes, color='#aaa', linewidth=0.1)
 
     # communes
-    district.plot(ax=axes, color='white')  # white background for alpha
+    district.plot(ax=axes, color='white', linewidth=0)  # white background for
+    # alpha
     communes.plot(
         norm=Normalize(0, len(colors) - 1),
         ax=axes,
@@ -97,6 +99,7 @@ def plot(district_df, cdf, type, child_type, key):
         cmap=cmap,
         classification_kwds={'bins': bins},
         alpha=0.88,
+        linewidth=0,
     )
     district.boundary.plot(ax=axes, color='#ddd', linewidth=0.3)
 

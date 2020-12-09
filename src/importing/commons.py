@@ -1,17 +1,25 @@
 from configuration import get as c
 from configuration import plural as p
 import pandas as pd
+import os
 
 lakh = 10**5
+
+def shorten_df(df):
+    if not os.environ.get('PRODUCTION'):
+        df = df.tail(20)
+        df = df.reset_index()
+    return df
 
 def process_entity(df, type, key):
 
     def new_cases(df):
         df['new'] = 0
-        df.loc[0, 'new'] = df.loc[0, 'confirmed']
+        # df.loc[0, 'new'] = df.loc[0, 'confirmed']
         for i in range(1, len(df)):
-            df.loc[i, 'new'] = df.loc[i, 'confirmed'] - df.loc[i - 1,
-                                                               'confirmed']
+            df.loc[i, 'new'] = df.loc[i, 'confirmed'] \
+                                - df.loc[i - 1, 'confirmed']
+
     def last_weeks_incidence(df):
         def f(row):
             r = lakh * row.last_weeks_incidence / c('populations')[p(type)][key]
