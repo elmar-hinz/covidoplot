@@ -7,7 +7,7 @@ lakh = 10**5
 
 def shorten_df(df):
     if not os.environ.get('PRODUCTION'):
-        df = df.tail(20)
+        df = df.tail(34)
         df = df.reset_index()
     return df
 

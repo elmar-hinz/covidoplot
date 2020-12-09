@@ -8,6 +8,7 @@ class VerticalComparisonSupervisor(Supervisor):
 
     def __init__(self,
                  dfs,
+                 count,
                  field,
                  type,
                  key,
@@ -15,6 +16,8 @@ class VerticalComparisonSupervisor(Supervisor):
                  ylabel,
                  file_name_suffix
                  ):
+        self.count = count
+        dfs = self.shorten_frames(dfs)
         self.field = field
         self.type = type
         self.key = key

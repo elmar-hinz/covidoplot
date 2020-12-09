@@ -9,13 +9,16 @@ class ComparisonSupervisor(Supervisor):
 
     def __init__(self,
                  cdfs,
+                 count,
                  field,
                  type,
                  child_type,
                  key,
                  title_prefix,
-                 file_name_suffix
+                 file_name_suffix,
                  ):
+        self.count = count
+        cdfs = self.shorten_frames(cdfs, horizontal=True)
         self.field = field
         self.type = type
         self.child_type = child_type

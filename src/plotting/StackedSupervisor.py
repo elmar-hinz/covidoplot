@@ -4,7 +4,9 @@ from .types.StackedPlotter import StackedPlotter
 
 class StackedSupervisor(Supervisor):
 
-    def __init__(self, dfs, type, key):
+    def __init__(self, dfs, count, type, key):
+        self.count = count
+        dfs = self.shorten_frames(dfs)
         self.type = type
         self.key = key
         self.df = dfs[type + '-' + key]
