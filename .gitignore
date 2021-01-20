@@ -1,5 +1,6 @@
 todo.md
 .idea/
+data/cache/
 data/cleaned/
 data/raw/jhu/
 data/imported/
