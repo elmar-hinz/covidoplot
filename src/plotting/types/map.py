@@ -6,11 +6,12 @@ from matplotlib.colors import Normalize
 from configuration import get as c
 from configuration import plural as p
 from .lib.commons import save, mapsize
-from .lib.colors import green, yellow, red, darkgreen, darkred, darkerred
+from .lib.colors import green, yellow, orange, red, darkgreen, darkred, \
+    darkerred
 
-colors = [darkgreen, green, yellow, red, darkred, darkerred]
+colors = [darkgreen, green, yellow, orange, red, darkred]
 cmap = ListedColormap(colors)
-bins = [0, 35, 50, 100, 200]
+bins = [0, 25, 50, 100, 250, 500]
 
 
 def get_color(value):
@@ -145,7 +146,7 @@ def plot(district_df, cdf, type, child_type, key):
             fontstyle='italic',
         ),
         axis=1)
-    plt.suptitle('7-Tage-Inzidenzen im Kreis Höxter', fontsize=18)
+    plt.suptitle('7-Tage-Inzidenzen im Kreis Höxter', fontsize=18, y=0.93)
     day = date.strftime("%d.%m.%Y")
     axes.set_title(label='je 100.000 Einwohnern am ' + day, fontsize=16)
     plt.axis('off')

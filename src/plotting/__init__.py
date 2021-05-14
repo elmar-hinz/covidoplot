@@ -3,6 +3,7 @@ from plotting.prepare import concat
 from plotting.entities import process_countries
 from plotting.entities import process_disctricts
 from plotting.entities import process_communes
+from plotting.entities import process_ages
 
 def do(args):
     print('Argument List:', str(args))
@@ -14,4 +15,6 @@ def do(args):
         process_disctricts(dfs, cdfs, args[1:])
     if len(args) == 0 or args[0] == 'communes':
         process_communes(dfs, args[1:])
+    if len(args) == 0 or args[0] == 'ages':
+        process_ages(dfs, args[1:])
 

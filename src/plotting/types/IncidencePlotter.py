@@ -39,6 +39,6 @@ class IncidencePlotter(TimePlotter):
         plt.axhline(50, color='r', label=label_line_50, linewidth=1.5, alpha=0.8)
         plt.axhline(100, color='#800000', label=label_line_100, linewidth=1.5,
                     alpha=0.8)
-        plt.axhline(200, color='#600000', label=label_line_100, linewidth=1.5,
+        plt.axhline(200, color='#600000', label=label_line_200, linewidth=1.5,
                     alpha=0.8)
 

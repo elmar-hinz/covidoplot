@@ -24,14 +24,14 @@ class VerticalComparisonSupervisor(Supervisor):
         self.title_prefix = title_prefix
         self.ylabel = ylabel
         self.file_name_suffix = file_name_suffix
-        self.colors = [colors[i] for i in [0, 3, 5, 9]]
+        self.colors = [colors[i] for i in [0, 3, 5,7, 9]]
         self.dfs = [
             dfs['country-germany'],
             dfs['country-italy'],
+            dfs['country-south-korea'],
         ]
         self.labels = [
-            'Deutschland', 'Italien',
-#            'Deutschlandtrend ohne Lockerungen'
+            'Deutschland', 'Italien', 'Südkorea'
         ]
         if type in ['commune', 'district']:
             # Hack TODO improve

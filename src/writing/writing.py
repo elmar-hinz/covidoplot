@@ -17,7 +17,9 @@ def write_dataframes(dataframes):
     for key, df in dataframes.items():
         path = c('directories.export.data') + key + '.json'
         df.to_json(path, orient='records', date_format='iso')
-
+    key = 'district-hoexter-ages'
+    path = c('directories.export.data') + key + '.json'
+    df.to_json(path, orient='records', date_format='iso')
 
 def do():
     write_configuration()

@@ -1,9 +1,12 @@
+import pandas as pd
+import matplotlib.pyplot as plt
 from configuration import get as c
 from plotting.types import map
 from .ComparisonSupervisor import ComparisonSupervisor
 from .StackedSupervisor import StackedSupervisor
 from .IncidenceSupervisor import IncidenceSupervisor
 from .VerticalComparisonSupervisor import VerticalComparisonSupervisor
+from .types.AgesPlotter import AgesPlotter
 import os
 
 if not os.environ.get('PRODUCTION'):
@@ -33,10 +36,16 @@ def process_disctricts(dfs, cdfs, args):
             ComparisonSupervisor(cdfs, count, 'density_of_illness', 'district', 'commune',
                                  district, 'Infektionsrisiko',
                                  'risc-comparison').run()
+            ComparisonSupervisor(cdfs, count, 'last_weeks_incidence',
+                                 'district', 'commune',
+                                 district, 'Wocheninzidenzen',
+                                 'incidence-comparison').run()
             IncidenceSupervisor(dfs, count, 'district', district).run()
-            VerticalComparisonSupervisor(dfs, count, 'density_of_illness', 'district',
+            VerticalComparisonSupervisor(dfs, count, 'last_weeks_incidence',
+                                         'district',
                                          district, 'Risikovergleich',
-                                         'Aktiv Infizierte je 100.000 Einwohner',
+                                         # 'Aktiv Infizierte je 100.000 Einwohner',
+                                         'Wocheninzidenz',
                                          'vertical-risc-comparison').run()
 
 def process_communes(dfs, args):
@@ -49,9 +58,20 @@ def process_communes(dfs, args):
         for count in counts:
             StackedSupervisor(dfs, count, 'commune', commune).run()
             IncidenceSupervisor(dfs, count, 'commune', commune).run()
-            VerticalComparisonSupervisor(dfs, count, 'density_of_illness',
+            VerticalComparisonSupervisor(dfs, count, 'last_weeks_incidence',
                                          'commune',
                                          commune, 'Risikovergleich',
-                                         'Aktiv Infizierte je 100.000 Einwohner',
+                                         'Wocheninzidenz',
                                          'vertical-risc-comparison').run()
+def process_ages(dfs, args):
+    print('Ages argument List:', str(args))
+    ages = dfs['district-hoexter-ages']
+    for key, group in ages.groupby(['Jahr', 'Monat']):
+        AgesPlotter(group).run()
+        name = 'district-hoexter-ages-' \
+               + str(key[0]) + '-' + str(key[1]) + '.png'
+        path = c('directories.export.plots') + name
+        plt.savefig(path)
+        plt.close()
+
 

@@ -77,16 +77,16 @@ configuration = {
     'populations': {
         # 31.12.2019: https://www.it.nrw/statistik/eckdaten/bevoelkerung-nach-gemeinden-93051?fbclid=IwAR1SODPI0V5GuLr73CwuUO-MVdGjZlIm4Ce5eln3Enyc42yuKXUOVETT9r4
         'communes': {
+            'hoexter': 28808,
+            'warburg': 23076,
             'bad-driburg': 18959,
             'brakel': 16137,
-            'borgentreich': 8543,
             'beverungen': 13103,
-            'hoexter': 28808,
-            'marienmuenster': 4902,
-            'nieheim': 6084,
             'steinheim': 12528,
-            'warburg': 23076,
-            'willebadessen': 8111
+            'borgentreich': 8543,
+            'willebadessen': 8111,
+            'nieheim': 6084,
+            'marienmuenster': 4902
         },
         'districts': {
             # 31.12.2019: https://www.it.nrw/statistik/eckdaten/bevoelkerung-nach-gemeinden-93051?fbclid=IwAR1SODPI0V5GuLr73CwuUO-MVdGjZlIm4Ce5eln3Enyc42yuKXUOVETT9r4
@@ -101,6 +101,7 @@ configuration = {
         }
     },
     'directories': {
+        'cache': my_directory + '../data/cache/',
         'raw': {
             'districts': {
                 'hoexter': my_directory + '../data/raw/kreis-hoexter/'
@@ -134,6 +135,10 @@ configuration = {
                            '../data/raw/kreis-hoexter/district-district.csv'
             }
         },
+        'cache': {
+            'rki_kreis_hoexter': my_directory +
+                                 '../data/cache/rki_kreis_hoexter.json',
+        },
     }
 }
 
@@ -148,6 +153,7 @@ def get(key):
     return current
 
 
+Path(get('directories.cache')).mkdir(parents=True, exist_ok=True)
 Path(get('directories.imported')).mkdir(parents=True, exist_ok=True)
 shutil.rmtree(get('directories.export.plots'))
 Path(get('directories.export.plots')).mkdir(parents=True, exist_ok=True)
